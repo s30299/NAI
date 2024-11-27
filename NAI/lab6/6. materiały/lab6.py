@@ -33,9 +33,12 @@ image3= cv2.rectangle(image,(0,0),(255,255),color2)
 
 #zadanie1
 result1 = cv2.imread('img.jpg')
-result1= cv2.subtract(result1,matrix_add)
+result1 = cv2.cvtColor(result1,cv2.COLOR_BGR2GRAY)
+#result1= cv2.subtract(result1,matrix_add)
+result1 = cv2.cvtColor(result1,cv2.COLOR_GRAY2BGR)
 result1 = cv2.rectangle(result1,(100,100),(300,300),color)
 cv2.imwrite('result1.jpg',result1)
+
 #zadanie2
 result2= cv2.imread('noise.jpg')
 edges_img = cv2.Canny(result2,100,200)
@@ -43,27 +46,38 @@ edges_img_smooth = cv2.medianBlur(edges_img,5)
 result2 = cv2.medianBlur(result2,5)
 result2 = cv2.Canny(result2,100,200)
 #zadanie3
+
 pjatk = cv2.imread('pjatk.jpg')
 logo = cv2.imread('logo.jpg')
-white = (255,255,255)
 
-
-matrixLogo = np.ones(logo.shape,dtype="uint8")*100
-logo_dark = cv2.cvtColor(logo,cv2.COLOR_BGR2GRAY)
-
-logo_dark = cv2.subtract(logo,matrixLogo)
-
-#mask = cv2.inRange(logo,(100,100,100),(255,255,255))
-mask = cv2.inRange(logo_dark,(250,250,250),(255,255,255))
-#logo = cv2.bitwise_not(mask)
-
-logo = cv2.subtract(logo,logo)
-
-#logo = cv2.cvtColor(pjatk,cv2.COLOR_BGR2RGB)
+mask = cv2.inRange(logo, (200, 200, 200), (255, 255, 255))
+mask_inv = cv2.bitwise_not(mask)
 matrix =  np.ones(pjatk.shape,dtype="uint8")*100
 pjatk = cv2.add(pjatk,matrix)
-#pjatkResult = cv2.add(pjatk,logo)
-pjatkResult = cv2.bitwise_and(pjatk,pjatk,mask=mask)
+logo_no_white = cv2.bitwise_and(logo, logo, mask=mask_inv)
+
+pjatk_bg = cv2.bitwise_and(pjatk, logo, mask=mask)
+pjatkResult= cv2.add(pjatk_bg, logo_no_white)
+
+#zadanieDomowe
+film= cv2.VideoCapture('video.mp4')
+
+frame_width = int(film.get(cv2.CAP_PROP_FRAME_WIDTH))
+frame_height = int(film.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps = int(film.get(cv2.CAP_PROP_FPS))
+result_video = cv2.VideoWriter("wynik_Film.mp4", cv2.VideoWriter_fourcc(*'mp4v'), fps, (frame_width, frame_height))
+
+
+while film.isOpened():
+    ret, frame = film.read()
+    if not ret:
+        break
+    mask = cv2.inRange(frame, (1, 0, 0), (255, 120, 120))
+    mask_inv = cv2.bitwise_not(mask)
+    frame= cv2.bitwise_and(frame, frame, mask=mask_inv)
+    result_video.write(frame)
+
+
 
 ##show
 #cv2.imshow('image',image)
@@ -74,6 +88,7 @@ cv2.imshow('result2_after',edges_img_smooth)
 cv2.imshow('logo',logo)
 #cv2.imshow('pjatk',pjatk)
 cv2.imshow('pjatk_final',pjatkResult)
+# cv2.imshow('video',film)
 
 
 

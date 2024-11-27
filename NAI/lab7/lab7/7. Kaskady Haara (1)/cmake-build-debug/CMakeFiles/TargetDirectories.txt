@@ -1,0 +1,3 @@
+Z:/NAI/lab7/lab7/7. Kaskady Haara (1)/cmake-build-debug/CMakeFiles/07_opencv.dir
+Z:/NAI/lab7/lab7/7. Kaskady Haara (1)/cmake-build-debug/CMakeFiles/edit_cache.dir
+Z:/NAI/lab7/lab7/7. Kaskady Haara (1)/cmake-build-debug/CMakeFiles/rebuild_cache.dir

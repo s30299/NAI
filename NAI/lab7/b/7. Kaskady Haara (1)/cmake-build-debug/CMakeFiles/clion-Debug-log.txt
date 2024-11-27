@@ -1,0 +1,1 @@
+CMakeLists.txt not found in Z:\NAI\lab7\b\7. Kaskady Haara (1) Select CMakeLists.txt
